@@ -1,0 +1,8 @@
+.DS_Store
+.terraform/
+terraform.tfvars
+*.tfstate*
+kube_config_cluster.yml
+*.out
+packer/packer_cache
+packer/variables.json

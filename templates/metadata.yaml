@@ -1,0 +1,9 @@
+instance-id: ${instance}
+local-hostname: ${instance}
+network:
+  version: 2
+  ethernets:
+    nics:
+      match:
+        name: ens*
+      dhcp4: yes

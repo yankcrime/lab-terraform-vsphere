@@ -1,0 +1,5 @@
+vsphere_password   = "abc123"
+vsphere_datacenter = "int"
+vsphere_network    = "vmGuests"
+ad_username        = "INT\\rancher"
+ad_password        = "abc123"
