@@ -43,6 +43,11 @@ variable "vsphere_vm_template" {
   default = "template_ubuntu2004_nocloudinit"
 }
 
+variable "ad_server" {
+  description = "Active Directory server(s) IP or hostname"
+  default = [""]
+}
+
 variable "ad_username" {
   description = "Active Directory service account used for lookups"
   default = ""
@@ -53,9 +58,31 @@ variable "ad_password" {
   default = ""
 }
 
+variable "ad_user_search_base" {
+  description = "AD user search base"
+  default = ""
+}
+
+variable "ad_group_search_base" {
+  description = "AD group search base"
+  default = ""
+}
+
+variable "ad_default_login_domain" {
+  description = "Default AD login domain"
+  default = ""
+}
+
 variable "domain" {
   description = "Domain suffix"
   default = "int.dischord.org"
+}
+
+
+
+variable "rancher_ip_range" {
+  description = "Start of IP address range for Rancher Server VMs.  Note that a count value will be appended to this, so in the example below the Rancher Server VMs will have .210, .211 and .212 assigned"
+  default = "192.168.1.21"
 }
 
 variable "rancher_vip" {
@@ -71,6 +98,11 @@ variable "rancher_memory" {
 variable "rancher_disk" {
   description = "How much disk to allocate to Rancher Server instances"
   default = 20
+}
+
+variable "rancher_version" {
+  description = "Version of Rancher Server to deploy"
+  default = "2.4.8"
 }
 
 variable "downstream_cluster_memory" {
@@ -101,5 +133,20 @@ variable "keepalived_vip_interface" {
 variable "keepalived_vrrp_interface" {
   description = "Interface used for VRRP traffic"
   default = "ens192"
+}
+
+variable "network_gateway_ip" {
+  description = "IP of default gateway"
+  default = "192.168.1.1"
+}
+
+variable "network_dns_servers" {
+  description = "DNS servers to use"
+  default = ["192.168.1.1"]
+}
+
+variable "keepalived_helm_chart_folder" {
+  description = "Location on filesystem to Helm chart for keepalived"
+  default = ""
 }
 

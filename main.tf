@@ -24,11 +24,11 @@ resource "vsphere_virtual_machine" "rancher_cluster" {
         domain    = var.domain
       }
       network_interface {
-        ipv4_address = "192.168.1.21${count.index}"
+        ipv4_address = "${var.rancher_ip_range}${count.index}"
         ipv4_netmask = 24
       }
-      ipv4_gateway    = "192.168.1.1"
-      dns_server_list = ["192.168.1.1"]
+      ipv4_gateway    = var.network_gateway_ip
+      dns_server_list = var.network_dns_servers
       dns_suffix_list = [var.domain]
     }
   }
@@ -84,7 +84,7 @@ resource "local_file" "kube_cluster_yaml" {
 
 resource "helm_release" "keepalived" {
   name             = "keepalived-ingress-vip"
-  chart            = "../../../keepalived-ingress-vip/chart"
+  chart            = var.keepalived_helm_chart_folder
   namespace        = "vip-system"
   create_namespace = true
 
@@ -122,7 +122,7 @@ resource "helm_release" "cert-manager" {
 resource "helm_release" "rancher" {
   name             = "rancher"
   chart            = "rancher"
-  version          = "2.4.8"
+  version          = var.rancher_version
   namespace        = "cattle-system"
   create_namespace = true
   repository       = "https://releases.rancher.com/server-charts/latest"
@@ -171,14 +171,14 @@ resource "rancher2_bootstrap" "admin" {
 }
 
 resource "rancher2_auth_config_activedirectory" "activedirectory" {
-  servers                         = ["192.168.1.121"]
+  servers                         = var.ad_server
   tls                             = false
   port                            = 389
   service_account_username        = var.ad_username
   service_account_password        = var.ad_password
-  default_login_domain            = "INT"
-  user_search_base                = "dc=int,dc=dischord,dc=org"
-  group_search_base               = "dc=int,dc=dischord,dc=org"
+  default_login_domain            = var.ad_default_login_domain
+  user_search_base                = var.ad_user_search_base
+  group_search_base               = var.ad_group_search_base
   nested_group_membership_enabled = true
 }
 
