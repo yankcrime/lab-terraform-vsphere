@@ -1,27 +1,3 @@
-data "vsphere_datacenter" "dc" {
-  name = var.vsphere_datacenter
-}
-
-data "vsphere_resource_pool" "pool" {
-  name          = "esxi01.int.dischord.org/Resources"
-  datacenter_id = data.vsphere_datacenter.dc.id
-}
-
-data "vsphere_datastore" "datastore" {
-  name          = "datastore1"
-  datacenter_id = data.vsphere_datacenter.dc.id
-}
-
-data "vsphere_network" "network" {
-  name          = var.vsphere_network
-  datacenter_id = data.vsphere_datacenter.dc.id
-}
-
-data "vsphere_virtual_machine" "template" {
-  name          = "template_ubuntu2004_nocloudinit"
-  datacenter_id = data.vsphere_datacenter.dc.id
-}
-
 resource "vsphere_virtual_machine" "rancher_cluster" {
   count        = 3
   name         = "rancher${count.index}"
@@ -36,7 +12,7 @@ resource "vsphere_virtual_machine" "rancher_cluster" {
 
   disk {
     label = "disk0"
-    size  = 20
+    size  = var.rancher_disk
   }
 
   clone {
@@ -45,7 +21,7 @@ resource "vsphere_virtual_machine" "rancher_cluster" {
     customize {
       linux_options {
         host_name = "rancher${count.index}"
-        domain    = "int.dischord.org"
+        domain    = var.domain
       }
       network_interface {
         ipv4_address = "192.168.1.21${count.index}"
@@ -53,7 +29,7 @@ resource "vsphere_virtual_machine" "rancher_cluster" {
       }
       ipv4_gateway    = "192.168.1.1"
       dns_server_list = ["192.168.1.1"]
-      dns_suffix_list = ["int.dischord.org"]
+      dns_suffix_list = [var.domain]
     }
   }
 
@@ -67,8 +43,8 @@ resource "vsphere_virtual_machine" "rancher_cluster" {
     connection {
       host     = self.guest_ip_addresses.0
       type     = "ssh"
-      user     = "packerbuilt"
-      password = "PackerBuilt!"
+      user     = var.ssh_user
+      password = var.ssh_password
     }
   }
 
@@ -80,8 +56,8 @@ resource "vsphere_virtual_machine" "rancher_cluster" {
     connection {
       host     = self.guest_ip_addresses.0
       type     = "ssh"
-      user     = "packerbuilt"
-      password = "PackerBuilt!"
+      user     = var.ssh_user
+      password = var.ssh_password
     }
   }
 }
@@ -114,11 +90,11 @@ resource "helm_release" "keepalived" {
 
   set {
     name  = "keepalived.vipInterfaceName"
-    value = "ens192"
+    value = var.keepalived_vip_interface
   }
   set {
     name  = "keepalived.vrrpInterfaceName"
-    value = "ens192"
+    value = var.keepalived_vrrp_interface
   }
   set {
     name  = "keepalived.vipAddressCidr"

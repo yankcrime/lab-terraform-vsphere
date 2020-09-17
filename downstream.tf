@@ -4,7 +4,7 @@ resource "vsphere_virtual_machine" "downstream_cluster_control" {
   datastore_id = data.vsphere_datastore.datastore.id
 
   num_cpus = 2
-  memory   = 2048
+  memory   = var.downstream_cluster_memory
 
   guest_id = data.vsphere_virtual_machine.template.guest_id
 
@@ -12,7 +12,7 @@ resource "vsphere_virtual_machine" "downstream_cluster_control" {
 
   disk {
     label = "disk0"
-    size  = 20
+    size  = var.downstream_cluster_disk
   }
 
   clone {
@@ -21,7 +21,7 @@ resource "vsphere_virtual_machine" "downstream_cluster_control" {
     customize {
       linux_options {
         host_name = "control${count.index}"
-        domain    = "int.dischord.org"
+        domain    = var.domain
       }
       network_interface {
         ipv4_address = "192.168.1.22${count.index}"
@@ -29,7 +29,7 @@ resource "vsphere_virtual_machine" "downstream_cluster_control" {
       }
       ipv4_gateway    = "192.168.1.1"
       dns_server_list = ["192.168.1.1"]
-      dns_suffix_list = ["int.dischord.org"]
+      dns_suffix_list = [var.domain]
     }
   }
 
@@ -43,8 +43,8 @@ resource "vsphere_virtual_machine" "downstream_cluster_control" {
     connection {
       host     = self.guest_ip_addresses.0
       type     = "ssh"
-      user     = "packerbuilt"
-      password = "PackerBuilt!"
+      user     = var.ssh_user
+      password = var.ssh_password
     }
   }
 
@@ -56,8 +56,8 @@ resource "vsphere_virtual_machine" "downstream_cluster_control" {
     connection {
       host     = self.guest_ip_addresses.0
       type     = "ssh"
-      user     = "packerbuilt"
-      password = "PackerBuilt!"
+      user     = var.ssh_user
+      password = var.ssh_password
     }
   }
 }
@@ -85,7 +85,7 @@ resource "vsphere_virtual_machine" "downstream_cluster_worker" {
     customize {
       linux_options {
         host_name = "worker${count.index}"
-        domain    = "int.dischord.org"
+        domain    = var.domain
       }
       network_interface {
         ipv4_address = "192.168.1.23${count.index}"
@@ -93,7 +93,7 @@ resource "vsphere_virtual_machine" "downstream_cluster_worker" {
       }
       ipv4_gateway    = "192.168.1.1"
       dns_server_list = ["192.168.1.1"]
-      dns_suffix_list = ["int.dischord.org"]
+      dns_suffix_list = [var.domain]
     }
   }
 
@@ -107,8 +107,8 @@ resource "vsphere_virtual_machine" "downstream_cluster_worker" {
     connection {
       host     = self.guest_ip_addresses.0
       type     = "ssh"
-      user     = "packerbuilt"
-      password = "PackerBuilt!"
+      user     = var.ssh_user
+      password = var.ssh_password
     }
   }
 
@@ -120,8 +120,9 @@ resource "vsphere_virtual_machine" "downstream_cluster_worker" {
     connection {
       host     = self.guest_ip_addresses.0
       type     = "ssh"
-      user     = "packerbuilt"
-      password = "PackerBuilt!"
+      user     = var.ssh_user
+      password = var.ssh_password
+
     }
   }
 }
@@ -162,8 +163,8 @@ resource "null_resource" "downstream_cluster_deploy" {
     inline = ["${rancher2_cluster.downstream_cluster.cluster_registration_token.0["node_command"]} ${each.value}"]
     connection {
       host     = each.key
-      user     = "packerbuilt"
-      password = "PackerBuilt!"
+      user     = var.ssh_user
+      password = var.ssh_password
       type     = "ssh"
     }
   }
