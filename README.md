@@ -6,7 +6,7 @@ This repo contains everything I need to quickly spin up the following in my pers
 
 * Three nodes for Rancher Server
 * A three-node Kubernetes deployment via RKE
-* keepalived to provide a VIP for Rancher
+* keepalived to provide a VIP for Rancher (via Helm using a local checkout of [this repo](https://github.com/janeczku/keepalived-ingress-vip.git))
 * cert-manager
 * Rancher on the above cluster
 
