@@ -27,8 +27,8 @@ resource "vsphere_virtual_machine" "downstream_cluster_control" {
         ipv4_address = "192.168.1.22${count.index}"
         ipv4_netmask = 24
       }
-      ipv4_gateway    = "192.168.1.1"
-      dns_server_list = ["192.168.1.1"]
+      ipv4_gateway    = var.network_gateway_ip
+      dns_server_list = var.network_dns_servers
       dns_suffix_list = [var.domain]
     }
   }
@@ -91,8 +91,8 @@ resource "vsphere_virtual_machine" "downstream_cluster_worker" {
         ipv4_address = "192.168.1.23${count.index}"
         ipv4_netmask = 24
       }
-      ipv4_gateway    = "192.168.1.1"
-      dns_server_list = ["192.168.1.1"]
+      ipv4_gateway    = var.network_gateway_ip
+      dns_server_list = var.network_dns_servers
       dns_suffix_list = [var.domain]
     }
   }

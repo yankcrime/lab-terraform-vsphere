@@ -181,4 +181,3 @@ resource "rancher2_auth_config_activedirectory" "activedirectory" {
   group_search_base               = var.ad_group_search_base
   nested_group_membership_enabled = true
 }
-
