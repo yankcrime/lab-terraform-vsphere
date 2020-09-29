@@ -132,6 +132,11 @@ resource "helm_release" "rancher" {
     value = "rancher.${var.rancher_vip}.dnsify.me"
   }
 
+  set {
+    name = "antiAffinity"
+    value = "required"
+  }
+
   depends_on = [
     helm_release.keepalived,
     helm_release.cert-manager
