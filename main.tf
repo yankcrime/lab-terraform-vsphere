@@ -133,7 +133,7 @@ resource "helm_release" "rancher" {
   }
 
   set {
-    name = "antiAffinity"
+    name  = "antiAffinity"
     value = "required"
   }
 
@@ -142,6 +142,7 @@ resource "helm_release" "rancher" {
     helm_release.cert-manager
   ]
 }
+
 
 resource "null_resource" "wait_for_rancher" {
   provisioner "local-exec" {
@@ -175,6 +176,23 @@ resource "rancher2_bootstrap" "admin" {
   ]
 }
 
+resource "rancher2_token" "rancher-token" {
+  provider = rancher2
+}
+
+# Enable monitoring for the 'local' cluster
+#
+resource "null_resource" "enable_cluster_monitoring" {
+  depends_on = [ null_resource.wait_for_rancher ]
+  provisioner "local-exec" {
+    command = <<-EOF
+    curl --insecure -su "${rancher2_token.rancher-token.access_key}:${rancher2_token.rancher-token.secret_key}" -X POST -H 'Accept: application/json' -H 'Content-Type: application/json' \
+    -d '{"answers":{"exporter-node.enabled":"true", "exporter-node.resources.limits.memory":"400Mi", "exporter-node.ports.metrics.port":"9796", "operator.resources.limits.memory":"1000Mi", "prometheus.resources.core.limits.memory":"2000Mi"}, "version":null}' \
+    'https://rancher.${var.rancher_vip}.dnsify.me/v3/clusters/local?action=enableMonitoring'
+    EOF
+  }
+}
+
 resource "rancher2_auth_config_activedirectory" "activedirectory" {
   servers                         = var.ad_server
   tls                             = false
@@ -186,3 +204,4 @@ resource "rancher2_auth_config_activedirectory" "activedirectory" {
   group_search_base               = var.ad_group_search_base
   nested_group_membership_enabled = true
 }
+
