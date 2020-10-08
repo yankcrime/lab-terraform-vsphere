@@ -63,7 +63,8 @@ resource "vsphere_virtual_machine" "rancher_cluster" {
 }
 
 resource rke_cluster "rancher" {
-  ssh_agent_auth = true
+  ssh_agent_auth     = true
+  kubernetes_version = var.kubernetes_version
 
   dynamic nodes {
     for_each = vsphere_virtual_machine.rancher_cluster
@@ -182,16 +183,16 @@ resource "rancher2_token" "rancher-token" {
 
 # Enable monitoring for the 'local' cluster
 #
-resource "null_resource" "enable_cluster_monitoring" {
-  depends_on = [ null_resource.wait_for_rancher ]
-  provisioner "local-exec" {
-    command = <<-EOF
-    curl --insecure -su "${rancher2_token.rancher-token.access_key}:${rancher2_token.rancher-token.secret_key}" -X POST -H 'Accept: application/json' -H 'Content-Type: application/json' \
-    -d '{"answers":{"exporter-node.enabled":"true", "exporter-node.resources.limits.memory":"400Mi", "exporter-node.ports.metrics.port":"9796", "operator.resources.limits.memory":"1000Mi", "prometheus.resources.core.limits.memory":"2000Mi"}, "version":null}' \
-    'https://rancher.${var.rancher_vip}.dnsify.me/v3/clusters/local?action=enableMonitoring'
-    EOF
-  }
-}
+#resource "null_resource" "enable_cluster_monitoring" {
+#  depends_on = [ null_resource.wait_for_rancher ]
+#  provisioner "local-exec" {
+#    command = <<-EOF
+#    curl --insecure -su "${rancher2_token.rancher-token.access_key}:${rancher2_token.rancher-token.secret_key}" -X POST -H 'Accept: application/json' -H 'Content-Type: application/json' \
+#    -d '{"answers":{"exporter-node.enabled":"true", "exporter-node.resources.limits.memory":"400Mi", "exporter-node.ports.metrics.port":"9796", "operator.resources.limits.memory":"1000Mi", "prometheus.resources.core.limits.memory":"2000Mi"}, "version":null}' \
+#    'https://rancher.${var.rancher_vip}.dnsify.me/v3/clusters/local?action=enableMonitoring'
+#    EOF
+#  }
+#}
 
 resource "rancher2_auth_config_activedirectory" "activedirectory" {
   servers                         = var.ad_server

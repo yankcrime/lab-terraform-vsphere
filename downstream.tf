@@ -133,7 +133,7 @@ resource "rancher2_cluster" "downstream_cluster" {
   enable_network_policy = true
 
   rke_config {
-    kubernetes_version = "v1.18.6-rancher1-2"
+    kubernetes_version = var.kubernetes_version
     services {
       kube_api {
         secrets_encryption_config {
