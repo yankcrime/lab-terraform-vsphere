@@ -78,8 +78,6 @@ variable "domain" {
   default     = "int.dischord.org"
 }
 
-
-
 variable "rancher_ip_range" {
   description = "Start of IP address range for Rancher Server VMs.  Note that a count value will be appended to this, so in the example below the Rancher Server VMs will have .210, .211 and .212 assigned"
   default     = "192.168.1.21"
@@ -102,7 +100,7 @@ variable "rancher_disk" {
 
 variable "rancher_version" {
   description = "Version of Rancher Server to deploy"
-  default     = "2.5.1"
+  default     = "2.5.2"
 }
 
 variable "kubernetes_version" {
