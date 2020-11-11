@@ -153,3 +153,13 @@ variable "keepalived_helm_chart_folder" {
   default     = ""
 }
 
+
+variable "enable_monitoring" {
+  description = "Whether or not to enable monitoring"
+  default     = false
+}
+
+variable "enable_active_directory" {
+  description = "Whether or not to enable Rancher AD integration"
+  default     = false
+}

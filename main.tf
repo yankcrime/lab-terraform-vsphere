@@ -183,16 +183,17 @@ resource "rancher2_token" "rancher-token" {
 
 # Enable monitoring for the 'local' cluster
 #
-#resource "null_resource" "enable_cluster_monitoring" {
-#  depends_on = [ null_resource.wait_for_rancher ]
-#  provisioner "local-exec" {
-#    command = <<-EOF
-#    curl --insecure -su "${rancher2_token.rancher-token.access_key}:${rancher2_token.rancher-token.secret_key}" -X POST -H 'Accept: application/json' -H 'Content-Type: application/json' \
-#    -d '{"answers":{"exporter-node.enabled":"true", "exporter-node.resources.limits.memory":"400Mi", "exporter-node.ports.metrics.port":"9796", "operator.resources.limits.memory":"1000Mi", "prometheus.resources.core.limits.memory":"2000Mi"}, "version":null}' \
-#    'https://rancher.${var.rancher_vip}.dnsify.me/v3/clusters/local?action=enableMonitoring'
-#    EOF
-#  }
-#}
+resource "null_resource" "enable_cluster_monitoring" {
+  depends_on = [null_resource.wait_for_rancher]
+  provisioner "local-exec" {
+    command = <<-EOF
+    curl --insecure -su "${rancher2_token.rancher-token.access_key}:${rancher2_token.rancher-token.secret_key}" -X POST -H 'Accept: application/json' -H 'Content-Type: application/json' \
+    -d '{"answers":{"exporter-node.enabled":"true", "exporter-node.resources.limits.memory":"400Mi", "exporter-node.ports.metrics.port":"9796", "operator.resources.limits.memory":"1000Mi", "prometheus.resources.core.limits.memory":"2000Mi"}, "version":null}' \
+    'https://rancher.${var.rancher_vip}.dnsify.me/v3/clusters/local?action=enableMonitoring'
+    EOF
+  }
+  count = var.enable_monitoring ? 1 : 0
+}
 
 resource "rancher2_auth_config_activedirectory" "activedirectory" {
   servers                         = var.ad_server
@@ -200,9 +201,13 @@ resource "rancher2_auth_config_activedirectory" "activedirectory" {
   port                            = 389
   service_account_username        = var.ad_username
   service_account_password        = var.ad_password
+  test_username                   = var.ad_username
+  test_password                   = var.ad_password
   default_login_domain            = var.ad_default_login_domain
   user_search_base                = var.ad_user_search_base
   group_search_base               = var.ad_group_search_base
   nested_group_membership_enabled = true
+
+  count = var.enable_active_directory ? 1 : 0
 }
 
