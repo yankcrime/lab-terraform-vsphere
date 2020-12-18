@@ -1,65 +1,20 @@
-resource "vsphere_virtual_machine" "rancher_cluster" {
-  count        = 3
-  name         = "rancher${count.index}"
-  datastore_id = data.vsphere_datastore.datastore.id
+module "rke-rancher" {
+  source = "./modules/nodes"
+  num    = 3
+  cpus   = 2
+  memory = var.rancher_memory
+  name   = "rancher"
 
-  num_cpus = 2
-  memory   = var.rancher_memory
-
-  guest_id = data.vsphere_virtual_machine.template.guest_id
-
+  template_uuid    = data.vsphere_virtual_machine.template.id
+  guest_id         = data.vsphere_virtual_machine.template.guest_id
   resource_pool_id = data.vsphere_resource_pool.pool.id
 
-  disk {
-    label = "disk0"
-    size  = var.rancher_disk
-  }
+  datastore_id = data.vsphere_datastore.datastore.id
+  network_id   = data.vsphere_network.network.id
+  adapter_type = data.vsphere_virtual_machine.template.network_interface_types[0]
 
-  clone {
-    template_uuid = data.vsphere_virtual_machine.template.id
-
-    customize {
-      linux_options {
-        host_name = "rancher${count.index}"
-        domain    = var.domain
-      }
-      network_interface {
-        ipv4_address = "${var.rancher_ip_range}${count.index}"
-        ipv4_netmask = 24
-      }
-      ipv4_gateway    = var.network_gateway_ip
-      dns_server_list = var.network_dns_servers
-      dns_suffix_list = [var.domain]
-    }
-  }
-
-  network_interface {
-    network_id = data.vsphere_network.network.id
-  }
-
-  provisioner "file" {
-    source      = "${path.module}/templates/provision.sh"
-    destination = "/tmp/provision.sh"
-    connection {
-      host     = self.guest_ip_addresses.0
-      type     = "ssh"
-      user     = var.ssh_user
-      password = var.ssh_password
-    }
-  }
-
-  provisioner "remote-exec" {
-    inline = [
-      "sudo chmod +x /tmp/provision.sh",
-      "sudo /tmp/provision.sh"
-    ]
-    connection {
-      host     = self.guest_ip_addresses.0
-      type     = "ssh"
-      user     = var.ssh_user
-      password = var.ssh_password
-    }
-  }
+  domain_name = var.domain
+  ssh_user    = var.ssh_user
 }
 
 resource rke_cluster "rancher" {
@@ -67,15 +22,14 @@ resource rke_cluster "rancher" {
   kubernetes_version = var.kubernetes_version
 
   dynamic nodes {
-    for_each = vsphere_virtual_machine.rancher_cluster
+    for_each = module.rke-rancher.nodes
     content {
-      address           = vsphere_virtual_machine.rancher_cluster[nodes.key].default_ip_address
-      hostname_override = vsphere_virtual_machine.rancher_cluster[nodes.key].name
-      user              = "packerbuilt"
+      hostname_override = module.rke-rancher.nodes[nodes.key]
+      address           = module.rke-rancher.ip_addresses[nodes.key]
+      user              = var.ssh_user
       role              = ["controlplane", "etcd", "worker"]
     }
   }
-  depends_on = [vsphere_virtual_machine.rancher_cluster]
 }
 
 resource "local_file" "kube_cluster_yaml" {
@@ -103,7 +57,7 @@ resource "helm_release" "keepalived" {
   }
   set {
     name  = "pod.replicas"
-    value = length(vsphere_virtual_machine.rancher_cluster)
+    value = length(module.rke-rancher.nodes)
   }
 }
 
@@ -210,4 +164,3 @@ resource "rancher2_auth_config_activedirectory" "activedirectory" {
 
   count = var.enable_active_directory ? 1 : 0
 }
-

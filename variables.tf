@@ -30,7 +30,7 @@ variable "vsphere_resource_pool" {
 
 variable "vsphere_datastore" {
   description = "vSphere Datastore"
-  default     = "datastore1"
+  default     = "ds01"
 }
 
 variable "admin_password" {
@@ -40,7 +40,7 @@ variable "admin_password" {
 
 variable "vsphere_vm_template" {
   description = "Template to use for all VMs"
-  default     = "template_ubuntu2004_nocloudinit"
+  default     = "template_ubuntu2004_esxi_docker"
 }
 
 variable "ad_server" {
@@ -78,11 +78,6 @@ variable "domain" {
   default     = "int.dischord.org"
 }
 
-variable "rancher_ip_range" {
-  description = "Start of IP address range for Rancher Server VMs.  Note that a count value will be appended to this, so in the example below the Rancher Server VMs will have .210, .211 and .212 assigned"
-  default     = "192.168.1.21"
-}
-
 variable "rancher_vip" {
   description = "IP address of VIP for Rancher"
   default     = "192.168.1.215"
@@ -100,12 +95,17 @@ variable "rancher_disk" {
 
 variable "rancher_version" {
   description = "Version of Rancher Server to deploy"
-  default     = "2.5.2"
+  default     = "2.5.3"
 }
 
 variable "kubernetes_version" {
   description = "Version of Kubernetes to deploy"
-  default     = "v1.19.2-rancher1-1"
+  default     = "v1.19.4-rancher1-1"
+}
+
+variable "downstream_kubernetes_version" {
+  description = "Version of Kubernetes to deploy on downstream cluster"
+  default     = "v1.19.4-rancher1-1"
 }
 
 variable "downstream_cluster_memory" {
