@@ -105,17 +105,47 @@ variable "kubernetes_version" {
 
 variable "downstream_kubernetes_version" {
   description = "Version of Kubernetes to deploy on downstream cluster"
-  default     = "v1.19.4-rancher1-1"
+  default     = "v1.19.3-rancher1-2"
 }
 
-variable "downstream_cluster_memory" {
+variable "control_memory" {
   description = "How much memory to allocate to downstream cluster nodes"
   default     = 2048
+}
+
+variable "control_cpus" {
+  default = "2"
+}
+
+variable "worker_memory" {
+  default = "4096"
+}
+
+variable "worker_cpus" {
+  default = "4"
 }
 
 variable "downstream_cluster_disk" {
   description = "How much disk to allocate to downstream cluster nodes"
   default     = 20
+}
+
+variable "downstream_cluster_name" {
+  default = "demo"
+}
+
+variable "downstream_cluster_description" {
+  default = "Demo cluster"
+}
+
+variable "num_control" {
+  description = "Number of downstream nodes to deploy with controlplane and etcd roles"
+  default     = "1"
+}
+
+variable "num_worker" {
+  default     = "1"
+  description = "Number of downstream worker nodes to deploy"
 }
 
 variable "ssh_user" {
@@ -136,16 +166,6 @@ variable "keepalived_vip_interface" {
 variable "keepalived_vrrp_interface" {
   description = "Interface used for VRRP traffic"
   default     = "ens192"
-}
-
-variable "network_gateway_ip" {
-  description = "IP of default gateway"
-  default     = "192.168.1.1"
-}
-
-variable "network_dns_servers" {
-  description = "DNS servers to use"
-  default     = ["192.168.1.1"]
 }
 
 variable "keepalived_helm_chart_folder" {
