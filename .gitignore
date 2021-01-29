@@ -2,6 +2,7 @@
 .terraform/
 terraform.tfvars
 *.tfstate*
+*.lock*
 kube_config_cluster.yml
 *.out
 packer/packer_cache
