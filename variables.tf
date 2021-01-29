@@ -168,11 +168,6 @@ variable "keepalived_vrrp_interface" {
   default     = "ens192"
 }
 
-variable "keepalived_helm_chart_folder" {
-  description = "Location on filesystem to Helm chart for keepalived"
-  default     = ""
-}
-
 variable "enable_monitoring" {
   description = "Whether or not to enable monitoring"
   default     = false

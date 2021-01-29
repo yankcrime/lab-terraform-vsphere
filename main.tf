@@ -39,7 +39,8 @@ resource "local_file" "kube_cluster_yaml" {
 
 resource "helm_release" "keepalived" {
   name             = "keepalived-ingress-vip"
-  chart            = var.keepalived_helm_chart_folder
+  chart            = "keepalived-ingress-vip"
+  repository       = "https://janeczku.github.io/helm-charts/"
   namespace        = "vip-system"
   create_namespace = true
 
