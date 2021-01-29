@@ -85,7 +85,7 @@ variable "rancher_vip" {
 
 variable "rancher_memory" {
   description = "How much memory to allocate to Rancher Server instances"
-  default     = 4096
+  default     = 8192
 }
 
 variable "rancher_disk" {
@@ -95,7 +95,7 @@ variable "rancher_disk" {
 
 variable "rancher_version" {
   description = "Version of Rancher Server to deploy"
-  default     = "2.5.3"
+  default     = "2.5.5"
 }
 
 variable "kubernetes_version" {
@@ -172,7 +172,6 @@ variable "keepalived_helm_chart_folder" {
   description = "Location on filesystem to Helm chart for keepalived"
   default     = ""
 }
-
 
 variable "enable_monitoring" {
   description = "Whether or not to enable monitoring"
