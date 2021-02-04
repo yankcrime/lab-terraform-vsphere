@@ -30,6 +30,7 @@ module "rke-control" {
   adapter_type = data.vsphere_virtual_machine.template.network_interface_types[0]
 
   domain_name = var.domain
+  ssh_user    = var.ssh_user
 
   tags = [vsphere_tag.controlplane.id, vsphere_tag.etcd.id]
 }
@@ -50,6 +51,7 @@ module "rke-worker" {
   adapter_type = data.vsphere_virtual_machine.template.network_interface_types[0]
 
   domain_name = var.domain
+  ssh_user    = var.ssh_user
 
   tags = [vsphere_tag.worker.id]
 }

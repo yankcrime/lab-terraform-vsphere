@@ -54,7 +54,7 @@
       "type": "vsphere-iso",
       "username": "{{user `username`}}",
       "vcenter_server": "{{user `vcenter_server`}}",
-      "vm_name": "template_ubuntu2004_nocloudinit"
+      "vm_name": "{{ user `template_name`}}"
     }
   ],
   "provisioners": [

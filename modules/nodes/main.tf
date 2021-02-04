@@ -31,16 +31,9 @@ resource "vsphere_virtual_machine" "vm" {
   }
   tags = var.tags
 
-  provisioner "remote-exec" {
-    inline = [
-      "sudo growpart /dev/sda 1",
-      "sudo resize2fs /dev/sda1"
-    ]
-    connection {
-      host = self.guest_ip_addresses.0
-      type = "ssh"
-      user = var.ssh_user
-    }
+  extra_config = {
+    "guestinfo.userdata"          = base64encode(file("${path.module}/templates/userdata.yaml"))
+    "guestinfo.userdata.encoding" = "base64"
   }
-}
 
+}

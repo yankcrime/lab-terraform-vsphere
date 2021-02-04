@@ -4,8 +4,18 @@ users:
   - name: nick
     primary_group: nick
     sudo: ALL=(ALL) NOPASSWD:ALL
-    groups: sudo, wheel
+    groups: sudo, wheel, docker
     lock_passwd: true
-    shell: /usr/bin/bash
+    shell: /bin/bash
     ssh_authorized_keys:
     - ssh-rsa AAAAB3NzaC1yc2EAAAABIwAAAQEAxUkizE2ZSyjc21DMB27+zeH+eSiLp/8Nso+ITAAwlG3oE732PootURCtiS96CnVwjoBUHV85XsEWq0yWnD5RSGzJ/tlGpgUIedMP9RCUQ5Vlkj3LMrY5wF4hup5+UC87dnpQ0BLxqY+79/VNYrsQEtS1NmcSTwfV8mNHH+q0oEjemU4R4t14gP3elN2AvDSLRjvxN9rkgjEW504lMtUyvfudV6qx3loS1sh/96xTHN7XIKWyjsWkA2j4VIMJ6ytBvFuhIClHFu8mVVs5fufRmEDm3HPWqrMzyuXRh0sIzVvZswHm5MtRz2op4oK5eSFb0EmD9xGey+ZORczL9WrQww== nick@deadair.local
+
+write_files:
+  - content: |
+      { "registry-mirrors": ["http://syn:55000"] }
+    path: /etc/docker/daemon.json
+    permissions: '0644'
+
+runcmd:
+  - swapoff -a
+  - rm /.swap
