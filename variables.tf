@@ -40,7 +40,7 @@ variable "admin_password" {
 
 variable "vsphere_vm_template" {
   description = "Template to use for all VMs"
-  default     = "template_ubuntu2004_esxi_docker"
+  default     = "template_opensuse"
 }
 
 variable "ad_server" {
@@ -160,12 +160,12 @@ variable "ssh_password" {
 
 variable "keepalived_vip_interface" {
   description = "Interface to which the VIP should be assigned"
-  default     = "ens192"
+  default     = "eth0"
 }
 
 variable "keepalived_vrrp_interface" {
   description = "Interface used for VRRP traffic"
-  default     = "ens192"
+  default     = "eth0"
 }
 
 variable "enable_monitoring" {
