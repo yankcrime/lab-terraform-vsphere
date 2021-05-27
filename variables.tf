@@ -95,17 +95,17 @@ variable "rancher_disk" {
 
 variable "rancher_version" {
   description = "Version of Rancher Server to deploy"
-  default     = "2.5.5"
+  default     = "2.5.8"
 }
 
 variable "kubernetes_version" {
   description = "Version of Kubernetes to deploy"
-  default     = "v1.19.4-rancher1-1"
+  default     = "v1.20.6-rancher1-1"
 }
 
 variable "downstream_kubernetes_version" {
   description = "Version of Kubernetes to deploy on downstream cluster"
-  default     = "v1.19.3-rancher1-2"
+  default     = "v1.20.6-rancher1-1"
 }
 
 variable "control_memory" {
