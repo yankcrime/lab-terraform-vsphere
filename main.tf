@@ -60,6 +60,10 @@ resource "helm_release" "keepalived" {
     name  = "pod.replicas"
     value = length(module.rke-rancher.nodes)
   }
+  set {
+    name  = "pod.resources.limits.memory"
+    value = "48Mi"
+  }
 }
 
 resource "helm_release" "cert-manager" {
