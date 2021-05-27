@@ -11,11 +11,11 @@ terraform {
     }
     rancher2 = {
       source = "rancher/rancher2"
-      version = "1.11.0"
+      version = "1.15.1"
     }
     rke = {
       source  = "rancher/rke"
-      version = "1.1.7"
+      version = "1.2.2"
     }
     vsphere = {
       source = "hashicorp/vsphere"
