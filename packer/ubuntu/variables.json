@@ -1,0 +1,13 @@
+{
+    "vcenter_server":"vsphere.42can.org",
+    "username":"Administrator@vsphere.local",
+    "password":"xxx",
+    "datastore":"ds01",
+    "folder": "",
+    "host":"esxi01.42can.org",
+    "cluster": "",
+    "network": "pgMgmt",
+    "ssh_username": "packerbuilt",
+    "ssh_password": "PackerBuilt!",
+    "template_name": "template_ubuntu_cloudinit"
+}
