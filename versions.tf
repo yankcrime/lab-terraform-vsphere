@@ -10,16 +10,20 @@ terraform {
       source = "hashicorp/null"
     }
     rancher2 = {
-      source = "rancher/rancher2"
-      version = "1.15.1"
+      source  = "rancher/rancher2"
+      version = "1.22.2"
     }
     rke = {
       source  = "rancher/rke"
-      version = "1.2.2"
+      version = "1.3.0"
     }
     vsphere = {
       source = "hashicorp/vsphere"
     }
+    kubernetes = {
+      source = "hashicorp/kubernetes"
+      version = "2.8.0"
+    }
   }
-  required_version = ">= 0.13"
+  required_version = ">= 1.1"
 }

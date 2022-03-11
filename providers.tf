@@ -24,3 +24,7 @@ provider "rancher2" {
   token_key = rancher2_bootstrap.admin.token
   insecure = true
 }
+
+provider "kubernetes" {
+  config_path = local_file.kube_cluster_yaml.filename
+}

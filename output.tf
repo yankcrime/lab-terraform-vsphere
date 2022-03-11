@@ -3,7 +3,7 @@ output "rancher_hosts" {
 }
 
 output "rancher_url" {
-  value = "https://rancher.192.168.1.215.dnsify.me"
+  value = "https://rancher.${var.rancher_vip}.dnsify.me"
 }
 
 #output downstream_cluster_hosts {

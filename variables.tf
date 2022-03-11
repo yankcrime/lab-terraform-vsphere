@@ -35,7 +35,12 @@ variable "vsphere_datastore" {
 
 variable "admin_password" {
   description = "Rancher admin password"
-  default     = "admin"
+  default     = "658e9beb-5ca4-40a0-87ae-90fef733758a"
+}
+
+variable "initial_password" {
+  description = "Initial Rancher password"
+  default     = "658e9beb-5ca4-40a0-87ae-90fef733758a"
 }
 
 variable "vsphere_vm_template" {
@@ -75,12 +80,12 @@ variable "ad_default_login_domain" {
 
 variable "domain" {
   description = "Domain suffix"
-  default     = "int.dischord.org"
+  default     = "42can.org"
 }
 
 variable "rancher_vip" {
   description = "IP address of VIP for Rancher"
-  default     = "192.168.1.215"
+  default     = "192.168.20.215"
 }
 
 variable "rancher_memory" {
@@ -95,17 +100,17 @@ variable "rancher_disk" {
 
 variable "rancher_version" {
   description = "Version of Rancher Server to deploy"
-  default     = "2.5.8"
+  default     = "2.6.3"
 }
 
 variable "kubernetes_version" {
   description = "Version of Kubernetes to deploy"
-  default     = "v1.20.6-rancher1-1"
+  default     = "v1.21.7-rancher1-1"
 }
 
 variable "downstream_kubernetes_version" {
   description = "Version of Kubernetes to deploy on downstream cluster"
-  default     = "v1.20.6-rancher1-1"
+  default     = "v1.21.7-rancher1-1"
 }
 
 variable "control_memory" {
