@@ -1,5 +1,5 @@
-instance-id: ${instance}
-local-hostname: ${instance}
+instance-id: ${hostname}
+local-hostname: ${hostname}
 network:
   version: 2
   ethernets:

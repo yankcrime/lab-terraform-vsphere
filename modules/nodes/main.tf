@@ -32,8 +32,12 @@ resource "vsphere_virtual_machine" "vm" {
   tags = var.tags
 
   extra_config = {
-    "guestinfo.userdata"          = base64encode(file("${path.module}/templates/userdata.yaml"))
+    "guestinfo.userdata" = base64encode(templatefile("${path.module}/templates/userdata.yaml", {
+    hostname = "${var.name}-${count.index}" }))
     "guestinfo.userdata.encoding" = "base64"
+    "guestinfo.metadata" = base64encode(templatefile("${path.module}/templates/metadata.yaml", {
+    hostname = "${var.name}-${count.index}" }))
+    "guestinfo.metadata.encoding" = "base64"
   }
 
 }
